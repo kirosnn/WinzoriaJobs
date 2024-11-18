@@ -30,6 +30,7 @@ public class WinzoriaJobs extends JavaPlugin {
     private BossbarManager bossbarManager;
     private BukkitAudiences adventure;
     private JobsGUI jobsGUI;
+    FarmerJobListener farmerJobListener;
 
     public static Economy getEconomy() {
         return economy;
@@ -48,8 +49,9 @@ public class WinzoriaJobs extends JavaPlugin {
         FarmerHoe farmerHoe = new FarmerHoe(this);
         FarmerArmor farmerAmor = new FarmerArmor(this);
         HunterLame hunterLame = new HunterLame(this);
-        FarmerJobListener farmerJobListener = new FarmerJobListener(this, economy);
         Harvester harvester = new Harvester(this, langManager, databaseManager, farmerJobListener);
+        FarmerJobListener farmerJobListener = new FarmerJobListener(this, economy, harvester);
+
         databaseManager.setupSQLiteDatabase();
 
         if (!setupEconomy()) {
@@ -59,7 +61,7 @@ public class WinzoriaJobs extends JavaPlugin {
         }
 
         Bukkit.getPluginManager().registerEvents(new HunterJobListener(this, economy), this);
-        Bukkit.getPluginManager().registerEvents(new FarmerJobListener(this, economy), this);
+        Bukkit.getPluginManager().registerEvents(new FarmerJobListener(this, economy, harvester), this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(databaseManager), this);
         Bukkit.getPluginManager().registerEvents(new PlayerProgressionListener(this), this);
         getServer().getPluginManager().registerEvents(new HunterLameListener(this), this);

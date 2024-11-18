@@ -1,6 +1,7 @@
 package fr.kirosnn.winzoriajobs.listeners;
 
 import fr.kirosnn.winzoriajobs.WinzoriaJobs;
+import fr.kirosnn.winzoriajobs.items.Harvester;
 import fr.kirosnn.winzoriajobs.utils.JobBonus;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
@@ -23,11 +24,13 @@ public class FarmerJobListener implements Listener {
 
     private final WinzoriaJobs plugin;
     private final Economy economy;
+    private final Harvester harvester;
     private final HashMap<UUID, HashMap<Location, Material>> placedBlocks;
 
-    public FarmerJobListener(WinzoriaJobs plugin, Economy economy) {
+    public FarmerJobListener(WinzoriaJobs plugin, Economy economy, Harvester harvester) { // correction
         this.plugin = plugin;
         this.economy = economy;
+        this.harvester = harvester; // addition
         this.placedBlocks = new HashMap<>();
     }
 
@@ -35,28 +38,15 @@ public class FarmerJobListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
-        UUID playerUUID = player.getUniqueId();
+        ItemStack itemInHand = player.getItemInHand();
 
-        if (placedBlocks.containsKey(playerUUID) && placedBlocks.get(playerUUID).containsKey(block.getLocation())) {
-            placedBlocks.get(playerUUID).remove(block.getLocation());
-            return;
-        }
-
-        if (isMaturePlant(block)) {
-            int playerLevel = plugin.getDatabaseManager().getPlayerLevel(player.getName(), "farmer");
-            int currentXP = plugin.getDatabaseManager().getCurrentXP(player.getName(), "farmer");
-            int nextXP = plugin.getDatabaseManager().getXPForNextLevel(playerLevel);
-            int tier = plugin.getDatabaseManager().getPlayerTier(player.getName(), "farmer");
-
-            double baseXP = 2;
-            double baseMoney = 2.5;
-
-            double finalXP = JobBonus.applyBonus(baseXP, playerLevel);
-            double finalMoney = JobBonus.applyBonus(baseMoney, playerLevel);
-
-            plugin.getDatabaseManager().addXP(player.getName(), "farmer_xp", (int) finalXP);
-            economy.depositPlayer(player, finalMoney);
-            plugin.getBossbarManager().createOrUpdateBossBar(player, "farmer", playerLevel, currentXP, nextXP, tier);
+        if (harvester.isCustomHarvester(itemInHand, "level1") || harvester.isCustomHarvester(itemInHand, "level2")) { // correction
+            harvester.applyHarvesterEffect(block, determineRange(itemInHand), player, false); // correction
+            harvester.reduceHarvesterDurability(itemInHand, player); // correction
+            event.setCancelled(true);
+        } else if (isMaturePlant(block)) {
+            block.breakNaturally();
+            handleBlockBreakReward(player, block);
         }
     }
 
@@ -64,27 +54,22 @@ public class FarmerJobListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
-        Material material = event.getItemInHand().getType();
-        UUID playerUUID = player.getUniqueId();
+        ItemStack itemInHand = player.getItemInHand();
 
-        if (isSeedMaterial(material)) {
+        if (harvester.isCustomHarvester(itemInHand, "level1") || harvester.isCustomHarvester(itemInHand, "level2")) { // correction
+            String level = harvester.isCustomHarvester(itemInHand, "level2") ? "level2" : "level1"; // correction
+            int range = determineRange(itemInHand); // correction
 
-            placedBlocks.computeIfAbsent(playerUUID, k -> new HashMap<>()).put(block.getLocation(), material);
+            harvester.applyHarvesterEffect(block, range, player, true); // correction
+            harvester.reduceHarvesterDurability(itemInHand, player); // correction
+            return;
+        }
 
-            int playerLevel = plugin.getDatabaseManager().getPlayerLevel(player.getName(), "farmer");
-            int currentXP = plugin.getDatabaseManager().getCurrentXP(player.getName(), "farmer");
-            int nextXP = plugin.getDatabaseManager().getXPForNextLevel(playerLevel);
-            int tier = plugin.getDatabaseManager().getPlayerTier(player.getName(), "farmer");
 
-            double baseXP = 1;
-            double baseMoney = 1;
-
-            double finalXP = JobBonus.applyBonus(baseXP, playerLevel);
-            double finalMoney = JobBonus.applyBonus(baseMoney, playerLevel);
-
-            plugin.getDatabaseManager().addXP(player.getName(), "farmer_xp", (int) finalXP);
-            economy.depositPlayer(player, finalMoney);
-            plugin.getBossbarManager().createOrUpdateBossBar(player, "farmer", playerLevel, currentXP, nextXP, tier);
+        if (isSeedMaterial(block.getType())) { // correction
+            placedBlocks.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>())
+                    .put(block.getLocation(), block.getType());
+            handleBlockPlaceReward(player); // correction
         }
     }
 
@@ -147,8 +132,8 @@ public class FarmerJobListener implements Listener {
     }
 
     private boolean isSeedMaterial(Material material) {
-        return material == Material.SEEDS || material == Material.CARROT ||
-                material == Material.POTATO || material == Material.MELON_SEEDS ||
+        return material == Material.SEEDS || material == Material.CARROT_ITEM ||
+                material == Material.POTATO_ITEM || material == Material.MELON_SEEDS ||
                 material == Material.PUMPKIN_SEEDS || material == Material.NETHER_STALK;
     }
 
@@ -163,5 +148,48 @@ public class FarmerJobListener implements Listener {
             return block.getData() == 3;
         }
         return false;
+    }
+
+    private void handleBlockBreakReward(Player player, Block block) {
+        int playerLevel = plugin.getDatabaseManager().getPlayerLevel(player.getName(), "farmer");
+        int currentXP = plugin.getDatabaseManager().getCurrentXP(player.getName(), "farmer");
+        int nextXP = plugin.getDatabaseManager().getXPForNextLevel(playerLevel);
+        int tier = plugin.getDatabaseManager().getPlayerTier(player.getName(), "farmer");
+
+        double baseXP = 2;
+        double baseMoney = 2.5;
+
+        double finalXP = JobBonus.applyBonus(baseXP, playerLevel);
+        double finalMoney = JobBonus.applyBonus(baseMoney, playerLevel);
+
+        plugin.getDatabaseManager().addXP(player.getName(), "farmer_xp", (int) finalXP);
+        economy.depositPlayer(player, finalMoney);
+        plugin.getBossbarManager().createOrUpdateBossBar(player, "farmer", playerLevel, currentXP, nextXP, tier);
+    }
+
+    private void handleBlockPlaceReward(Player player) {
+        int playerLevel = plugin.getDatabaseManager().getPlayerLevel(player.getName(), "farmer");
+        int currentXP = plugin.getDatabaseManager().getCurrentXP(player.getName(), "farmer");
+        int nextXP = plugin.getDatabaseManager().getXPForNextLevel(playerLevel);
+        int tier = plugin.getDatabaseManager().getPlayerTier(player.getName(), "farmer");
+
+        double baseXP = 1.0;
+        double baseMoney = 1.0;
+
+        double finalXP = JobBonus.applyBonus(baseXP, playerLevel);
+        double finalMoney = JobBonus.applyBonus(baseMoney, playerLevel);
+
+        plugin.getDatabaseManager().addXP(player.getName(), "farmer_xp", (int) finalXP);
+        economy.depositPlayer(player, finalMoney);
+
+        plugin.getBossbarManager().createOrUpdateBossBar(player, "farmer", playerLevel, currentXP, nextXP, tier);
+    }
+
+    private int determineRange(ItemStack item) { // addition
+        String level = harvester.getHarvesterLevel(item.getItemMeta()); // addition
+        if (level != null) {
+            return level.equals("level1") ? 1 : 2; // addition
+        }
+        return 1; // addition
     }
 }

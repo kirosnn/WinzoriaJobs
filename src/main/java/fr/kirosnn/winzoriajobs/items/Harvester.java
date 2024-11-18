@@ -106,7 +106,12 @@ public class Harvester implements Listener {
         String level = getHarvesterLevel(item.getItemMeta());
         if (level == null) return;
 
-        int range = level.equals("level1") ? 1 : (level.equals("level2") ? 2 : 1);
+        int range;
+        if (level != null) {
+            range = level.equals("level1") ? 1 : (level.equals("level2") ? 2 : 1);
+        } else {
+            range = 1;
+        }
 
         if (action == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
@@ -121,7 +126,7 @@ public class Harvester implements Listener {
         }
     }
 
-    private void reduceHarvesterDurability(ItemStack item, Player player) {
+    public void reduceHarvesterDurability(ItemStack item, Player player) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasLore()) return;
 
@@ -176,15 +181,15 @@ public class Harvester implements Listener {
             case CROPS:
                 return new ItemStack(Material.SEEDS, 1);
             case POTATO:
-                return new ItemStack(Material.POTATO_ITEM, 1);
+                return new ItemStack(Material.POTATO, 1);
             case CARROT:
-                return new ItemStack(Material.CARROT_ITEM, 1);
+                return new ItemStack(Material.CARROT, 1);
             default:
                 return null;
         }
     }
 
-    private String getHarvesterLevel(ItemMeta meta) {
+    public String getHarvesterLevel(ItemMeta meta) {
         if (meta == null || !meta.hasLore()) {
             return null;
         }
@@ -200,7 +205,7 @@ public class Harvester implements Listener {
             String strippedLine = ChatColor.stripColor(line);
             if (strippedLine.startsWith(levelPrefix)) {
                 String level = strippedLine.replace(levelPrefix, "").trim();
-                return "lvl" + level;
+                return "level" + level;
             }
         }
         return null;
@@ -229,7 +234,7 @@ public class Harvester implements Listener {
         }
     }
 
-    private boolean isCustomHarvester(ItemStack item, String level) {
+    public boolean isCustomHarvester(ItemStack item, String level) {
         if (item == null || item.getType() != Material.WOOD_HOE) return false;
 
         ItemMeta meta = item.getItemMeta();
