@@ -27,10 +27,10 @@ public class FarmerJobListener implements Listener {
     private final Harvester harvester;
     private final HashMap<UUID, HashMap<Location, Material>> placedBlocks;
 
-    public FarmerJobListener(WinzoriaJobs plugin, Economy economy, Harvester harvester) { // correction
+    public FarmerJobListener(WinzoriaJobs plugin, Economy economy, Harvester harvester) {
         this.plugin = plugin;
         this.economy = economy;
-        this.harvester = harvester; // addition
+        this.harvester = harvester;
         this.placedBlocks = new HashMap<>();
     }
 
@@ -40,13 +40,40 @@ public class FarmerJobListener implements Listener {
         Block block = event.getBlock();
         ItemStack itemInHand = player.getItemInHand();
 
-        if (harvester.isCustomHarvester(itemInHand, "level1") || harvester.isCustomHarvester(itemInHand, "level2")) { // correction
-            harvester.applyHarvesterEffect(block, determineRange(itemInHand), player, false); // correction
-            harvester.reduceHarvesterDurability(itemInHand, player); // correction
+        // Debug: Log when the event starts
+        plugin.getLogger().info("[DEBUG] BlockBreakEvent triggered by: " + player.getName() + " on block: " + block.getType());
+
+
+        if (harvester.isCustomHarvester(itemInHand, "level1") || harvester.isCustomHarvester(itemInHand, "level2")) {
+            // Determine the range of the Harvester
+            int range = determineRange(itemInHand);
+
+            // Debug: Log the detected range and Harvester level
+            plugin.getLogger().info("[DEBUG] Using Harvester with range: " + range);
+
+            harvester.applyHarvesterEffect(block, range, player, false);
+
+            harvester.reduceHarvesterDurability(itemInHand, player);
+
+            if (isMaturePlant(block)) {
+                handleBlockBreakReward(player, block);
+
+                // Debug: Log that rewards were granted for a mature plant
+                plugin.getLogger().info("[DEBUG] Rewards granted for breaking mature plant: " + block.getType());
+            }
+
+
             event.setCancelled(true);
+
+            // Debug: Log that the event was canceled
+            plugin.getLogger().info("[DEBUG] BlockBreakEvent canceled for Harvester usage.");
         } else if (isMaturePlant(block)) {
+
             block.breakNaturally();
             handleBlockBreakReward(player, block);
+
+            // Debug: Log that rewards were granted for a non-Harvester break
+            plugin.getLogger().info("[DEBUG] Rewards granted for breaking mature plant without Harvester: " + block.getType());
         }
     }
 
@@ -56,20 +83,23 @@ public class FarmerJobListener implements Listener {
         Block block = event.getBlock();
         ItemStack itemInHand = player.getItemInHand();
 
-        if (harvester.isCustomHarvester(itemInHand, "level1") || harvester.isCustomHarvester(itemInHand, "level2")) { // correction
-            String level = harvester.isCustomHarvester(itemInHand, "level2") ? "level2" : "level1"; // correction
-            int range = determineRange(itemInHand); // correction
+        player.sendMessage("Bloc placé :" + event.getBlock()); // debug
 
-            harvester.applyHarvesterEffect(block, range, player, true); // correction
-            harvester.reduceHarvesterDurability(itemInHand, player); // correction
+        if (harvester.isCustomHarvester(itemInHand, "level1") || harvester.isCustomHarvester(itemInHand, "level2")) {
+            String level = harvester.isCustomHarvester(itemInHand, "level2") ? "level2" : "level1";
+            int range = determineRange(itemInHand);
+
+            harvester.applyHarvesterEffect(block, range, player, true);
+            harvester.reduceHarvesterDurability(itemInHand, player);
+            player.sendMessage("Utilisation d'un harvester personnalisée pour placer le bloc."); // debug
             return;
         }
 
-
-        if (isSeedMaterial(block.getType())) { // correction
+        if (isSeedMaterial(block.getType())) {
             placedBlocks.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>())
                     .put(block.getLocation(), block.getType());
-            handleBlockPlaceReward(player); // correction
+            handleBlockPlaceReward(player);
+            player.sendMessage("Bloc de graine placé, récompenses appliquées."); // debug
         }
     }
 
@@ -77,6 +107,7 @@ public class FarmerJobListener implements Listener {
     public void onCraftItem(CraftItemEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
+
             ItemStack item = event.getRecipe().getResult();
             Material material = item.getType();
 
@@ -106,6 +137,7 @@ public class FarmerJobListener implements Listener {
                 plugin.getDatabaseManager().addXP(player.getName(), "farmer_xp", (int) finalXP);
                 economy.depositPlayer(player, finalMoney);
                 plugin.getBossbarManager().createOrUpdateBossBar(player, "farmer", playerLevel, currentXP, nextXP, tier);
+                player.sendMessage("Craft réussi : récompenses appliquées !"); // debug
             }
         }
     }
@@ -113,6 +145,7 @@ public class FarmerJobListener implements Listener {
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Player player = event.getPlayer();
+
         if (event.getRightClicked().getType() == EntityType.COW || event.getRightClicked().getType() == EntityType.SHEEP) {
             int playerLevel = plugin.getDatabaseManager().getPlayerLevel(player.getName(), "farmer");
             int currentXP = plugin.getDatabaseManager().getCurrentXP(player.getName(), "farmer");
@@ -128,12 +161,13 @@ public class FarmerJobListener implements Listener {
             plugin.getDatabaseManager().addXP(player.getName(), "farmer_xp", (int) finalXP);
             economy.depositPlayer(player, finalMoney);
             plugin.getBossbarManager().createOrUpdateBossBar(player, "farmer", playerLevel, currentXP, nextXP, tier);
+            player.sendMessage("Interaction réussie avec une entité, récompenses appliquées."); // debug
         }
     }
 
     private boolean isSeedMaterial(Material material) {
-        return material == Material.SEEDS || material == Material.CARROT_ITEM ||
-                material == Material.POTATO_ITEM || material == Material.MELON_SEEDS ||
+        return material == Material.SEEDS || material == Material.CARROT ||
+                material == Material.POTATO || material == Material.MELON_SEEDS ||
                 material == Material.PUMPKIN_SEEDS || material == Material.NETHER_STALK;
     }
 
