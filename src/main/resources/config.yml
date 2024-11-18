@@ -1,0 +1,272 @@
+debug: false
+
+jobs-gui:
+  title: "&6&lJobs"
+  size: 45
+  items:
+    hunter:
+      slot: 21
+      material: DIAMOND_SWORD
+      name: "&c&lCHASSEUR"
+      lore:
+        - "&7Niveau: &e{level}"
+        - "&7XP: &e{xp}&7/&e{xp_level}"
+        - "&7Tier: &e{tier}"
+    farmer:
+      slot: 23
+      material: IRON_HOE
+      name: "&a&lFARMEUR"
+      lore:
+        - "&7Niveau: &e{level}"
+        - "&7XP: &e{xp}&7/&e{xp_level}"
+        - "&7Tier: &e{tier}"
+
+harvesters:
+  level1:
+    name: "&aHarvester Niveau 1"
+    lore:
+      - "&7Une houe magique pour récolter."
+      - "&7Niveau: &a1"
+    enchantments:
+      - "DURABILITY:3"
+      - "EFFICIENCY:2"
+    max-uses: 100
+  level2:
+    name: "&bHarvester Niveau 2"
+    lore:
+      - "&7Une houe magique plus puissante."
+      - "&7Niveau: &b2"
+    enchantments:
+      - "DURABILITY:4"
+      - "EFFICIENCY:4"
+    max-uses: 200
+
+upgradeharvester:
+  cost:
+    level2: 5000
+
+items:
+  farmerhoe:
+    type: WOOD_HOE
+    name: "&6Houe du Farmer"
+    lore:
+      - "&7Cette houe est parfaite pour les fermiers !"
+    enchantments:
+      EFFICIENCY:5
+      UNBREAKING:3
+    unbreakable: true
+
+  farmer_armor:
+    helmet:
+      type: LEATHER_HELMET
+      name: "&6Casque du Farmer"
+      lore:
+        - "&7Un casque protecteur"
+      unbreakable: true
+      effects:
+        - "SPEED:2"
+        - "RESISTANCE:1"
+    chestplate:
+      type: LEATHER_CHESTPLATE
+      name: "&6Plastron du Farmer"
+      lore:
+        - "&7Un plastron résistant"
+      unbreakable: true
+      effects:
+        - "SPEED:2"
+        - "RESISTANCE:1"
+    leggings:
+      type: LEATHER_LEGGINGS
+      name: "&6Cuissardes du Farmer"
+      lore:
+        - "&7Des cuissardes de protection"
+      unbreakable: true
+      effects:
+        - "SPEED:2"
+        - "RESISTANCE:1"
+    boots:
+      type: LEATHER_BOOTS
+      name: "&6Bottes du Farmer"
+      lore:
+        - "&7Des bottes pour courir vite"
+      unbreakable: true
+      effects:
+        - "SPEED:2"
+        - "RESISTANCE:1"
+
+  hunterlame:
+    type: GOLD_SWORD
+    name: "&6Lame de %player% - Kills: {kill}"
+    lore:
+      - "&7Cette lame est destinée aux chasseurs !"
+      - "&7Elle compte vos victimes..."
+      - "&7Total de kills: &a{kill}"
+    enchantments:
+      sharpness: 5
+      fire_aspect: 3
+    unbreakable: true
+
+rewards:
+  farmer:
+    level_5:
+      money: 200000
+      commands:
+        - nothing %layer%
+      item1:
+        type: ENCHANTED_BOOKS
+        enchantments:
+          FORTUNE: 3
+    level_10:
+      money: 400000
+      item:
+        type: DIAMOND_PICKAXE
+        name: "&6Pioche légendaire"
+        lore:
+          - "&7Une pioche légendaire pour"
+          - "&7les agriculteurs de haut niveau."
+        enchantments:
+          EFFICIENCY: 5
+          FORTUNE: 3
+          UNBREAKING: 3
+    level_15:
+      money: 750000
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            EFFICIENCY: 5
+            FORTUNE: 3
+            UNBREAKING: 3
+        - type: ENCHANTED_BOOK
+          enchantments:
+            EFFICIENCY: 5
+            FORTUNE: 3
+            UNBREAKING: 3
+    level_20:
+      money: 1000000
+      commands:
+        - say Félicitations à %player% pour avoir atteint le niveau 20 dans le métier de Farmer !
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            SILK_TOUCH: 1
+        - type: DIAMOND_BLOCK
+          amount: 5
+    level_25:
+      money: 1000000
+      commands:
+        - say Félicitations à %player% pour avoir atteint le niveau 25 dans le métier de Farmer !
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            SILK_TOUCH: 1
+        - type: DIAMOND_BLOCK
+          amount: 5
+    level_30:
+      money: 1000000
+      commands:
+        - say Félicitations à %player% pour avoir atteint le niveau 30 dans le métier de Farmer !
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            SILK_TOUCH: 1
+        - type: DIAMOND_BLOCK
+          amount: 5
+  hunter:
+    level_5:
+      money: 200000
+      commands:
+        - nothing %layer%
+      item1:
+        type: ENCHANTED_BOOKS
+        enchantments:
+          FORTUNE: 3
+    level_10:
+      money: 400000
+      item:
+        type: DIAMOND_PICKAXE
+        name: "&6Pioche légendaire"
+        lore:
+          - "&7Une pioche légendaire pour"
+          - "&7les agriculteurs de haut niveau."
+        enchantments:
+          EFFICIENCY: 5
+          FORTUNE: 3
+          UNBREAKING: 3
+    level_15:
+      money: 750000
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            EFFICIENCY: 5
+            FORTUNE: 3
+            UNBREAKING: 3
+        - type: ENCHANTED_BOOK
+          enchantments:
+            EFFICIENCY: 5
+            FORTUNE: 3
+            UNBREAKING: 3
+    level_20:
+      money: 1000000
+      commands:
+        - say Félicitations à %player% pour avoir atteint le niveau 20 dans le métier de Farmer !
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            SILK_TOUCH: 1
+        - type: DIAMOND_BLOCK
+          amount: 5
+    level_25:
+      money: 1000000
+      commands:
+        - say Félicitations à %player% pour avoir atteint le niveau 25 dans le métier de Farmer !
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            SILK_TOUCH: 1
+        - type: DIAMOND_BLOCK
+          amount: 5
+    level_30:
+      money: 1000000
+      commands:
+        - say Félicitations à %player% pour avoir atteint le niveau 30 dans le métier de Farmer !
+      items:
+        - type: ENCHANTED_BOOK
+          enchantments:
+            SILK_TOUCH: 1
+        - type: DIAMOND_BLOCK
+          amount: 5
+
+tiers:
+  farmer:
+    tier_2:
+      commands:
+        - jobsgive farmerhoe %player%
+        - ac key give %player% Epique
+    tier_3:
+      commands:
+        - ac key give %player% Epique
+        - ac key give %player% Légendaire
+    tier_4:
+      commands:
+        - ac key give %player% mythique
+        - jobsgive farmerarmor %player%
+  hunter:
+    tier_2:
+      items:
+        - type: BOW
+          enchantments:
+            PUNCH: 2
+            ARROW_INFINITE: 1
+            POWER: 5
+            FLAME: 1
+      commands:
+        - ac key give %player% Epique
+    tier_3:
+      commands:
+        - ac key give %player% Epique
+        - ac key give %player% Légendaire
+    tier_4:
+      commands:
+        - jobsgive farmerarmor %player%
+
+

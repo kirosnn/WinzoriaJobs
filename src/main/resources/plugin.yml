@@ -1,0 +1,23 @@
+name: WinzoriaJobs
+version: '${project.version}'
+main: fr.kirosnn.winzoriajobs.WinzoriaJobs
+api-version: '1.8'
+depend: [ Vault ]
+
+commands:
+  jobs:
+
+  jobsgive:
+    permission: winzoriajobs.give
+
+  upgradeharvester:
+
+  jobsdebug:
+    permission: winzoriajobs.debug
+permissions:
+  winzoriajobs.reload:
+    default: op
+  winzoriajobs.give:
+    default: op
+  winzoriajobs.debug:
+    default: op

@@ -1,0 +1,55 @@
+hunter-bossbar: "&cHunter &7| Niveau: &e{level} &7| XP: &e{current_xp}/{next_xp} &7| Tier: &e{tier}"
+farmer-bossbar: "&aFarmer &7| Niveau: &e{level} &7| XP: &e{current_xp}/{next_xp} &7| Tier: &e{tier}"
+
+commands:
+  jobs:
+    reload: "&aLa configuration a été rechargée avec succès."
+    no-permission: "&cVous n'avez pas la permission d'exécuter cette commande."
+    player-only: "&cCette commande ne peut être exécutée que par un joueur."
+    invalid: "&cCommande inconnue."
+
+  jobsgive:
+    no-permission: "&cVous n'avez pas la permission d'exécuter cette commande."
+    usage: "&cUsage: /jobsgive <harvester|farmerhoe|farmerarmor|hunterlame> <nomdujoueur> [options]"
+    usage-harvester: "&cUsage: /jobsgive harvester <nomdujoueur> <lvl1|lvl2>"
+    invalid-level: "&cNiveau invalide. Utilisez 'lvl1' ou 'lvl2'."
+    success: "&a{item} donné à &e{player}&a."
+    invalid-item: "&cType d'objet invalide. Utilisez 'harvester', 'farmerhoe' ou 'farmerarmor'."
+    player-not-found: "&cLe joueur &e{player} &cn'est pas en ligne."
+
+  harvester:
+    durability: "&7Utilisations restantes : {uses}"
+    broke: "&cVotre Harvester s'est cassé !"
+    level: "&7Niveau: "
+    no-level: "&cVous devez être au moins niveau 5 Farmer pour utiliser cet outil !"
+
+upgradeharvester:
+  not-holding: "&cVous devez tenir un Harvester pour l'améliorer !"
+  invalid-item: "&cCet objet n'est pas un Harvester valide."
+  max-level: "&aVotre Harvester est déjà au niveau maximum."
+  not-enough-money: "&cVous n'avez pas assez d'argent pour cette amélioration. Coût : &e{cost} &c!"
+  success: "&aVotre Harvester a été amélioré au niveau &e{level}&a !"
+
+messages:
+  level_up: "&aFélicitations ! Vous avez atteint le niveau &6{level} &adans le métier de &9{job}&a !"
+  tier_up: "&aIncroyable ! Vous avez atteint le Tier &6{tier} &adans le métier de &9{job}&a !"
+  inventory_full_drop: "&eVotre inventaire est plein. Une récompense a été déposée au sol."
+  farmer_level_5_reward: "&aFélicitations pour avoir atteint le niveau 5 dans le métier de Farmer ! Vous avez reçu &6200 000 pièces &aet un livre enchanté Fortune III !"
+  farmer_level_10_reward: "&aFélicitations pour avoir atteint le niveau 10 en Farmer ! Vous avez reçu &6400000&a et une &bpioche légendaire&a."
+  farmer_level_15_reward: "&aFélicitations pour avoir atteint le niveau 15 en Farmer ! Vous avez reçu &6750000 pièces&a et deux &blivres enchantés spéciaux&a."
+  farmer_level_20_reward: "&aFélicitations pour avoir atteint le niveau 20 en Farmer ! Vous avez reçu &62 000 000 pièces !"
+  farmer_level_25_reward: "&aFélicitations pour avoir atteint le niveau 15 en Farmer ! Vous avez reçu &6750000 pièces&a et deux &blivres enchantés spéciaux&a."
+  farmer_level_30_reward: "&aFélicitations pour avoir atteint le niveau 20 en Farmer ! Vous avez reçu &62 000 000 pièces !"
+  hunter_level_5_reward: "&aFélicitations pour avoir atteint le niveau 5 dans le métier de Farmer ! Vous avez reçu &6200 000 pièces &aet un livre enchanté Fortune III !"
+  hunter_level_10_reward: "&aFélicitations pour avoir atteint le niveau 10 en Farmer ! Vous avez reçu &6400000&a et une &bpioche légendaire&a."
+  hunter_level_15_reward: "&aFélicitations pour avoir atteint le niveau 15 en Farmer ! Vous avez reçu &6750000 pièces&a et deux &blivres enchantés spéciaux&a."
+  hunter_level_20_reward: "&aFélicitations pour avoir atteint le niveau 20 en Farmer ! Vous avez reçu &62 000 000 pièces !"
+  hunter_level_25_reward: "&aFélicitations pour avoir atteint le niveau 15 en Farmer ! Vous avez reçu &6750000 pièces&a et deux &blivres enchantés spéciaux&a."
+  hunter_level_30_reward: "&aFélicitations pour avoir atteint le niveau 20 en Farmer ! Vous avez reçu &62 000 000 pièces !"
+  farmer_tier_1_reward: "&aBravo pour avoir atteint le Tier 1 en Farmer ! Vous avez reçu &62 000 000 pièces &aet des pommes dorées !"
+  farmer_tier_2_reward: "&aIncroyable ! Vous êtes maintenant au Tier 2 en Farmer ! Vous avez reçu &64 000 000 pièces &aet un livre enchanté spécial !"
+  farmer_tier_3_reward: "&aBravo pour avoir atteint le Tier 1 en Hunter ! Vous avez reçu &62 500 000 pièces et un arc enchanté !"
+  hunter_tier_1_reward: "&aBravo pour avoir atteint le Tier 1 en Farmer ! Vous avez reçu &62 000 000 pièces &aet des pommes dorées !"
+  hunter_tier_2_reward: "&aIncroyable ! Vous êtes maintenant au Tier 2 en Farmer ! Vous avez reçu &64 000 000 pièces &aet un livre enchanté spécial !"
+  hunter_tier_3_reward: "&aBravo pour avoir atteint le Tier 1 en Hunter ! Vous avez reçu &62 500 000 pièces et un arc enchanté !"
+
